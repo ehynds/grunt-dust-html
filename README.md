@@ -26,10 +26,10 @@ An example configuration looks like this:
 
 ```js
 grunt.initConfig({
-  removelogging: {
+  dusthtml: {
     dist: {
-      src: "js/application.js",
-      dest: "js/application-clean.js",
+      src: "src/home.dust",
+      dest: "dist/home.html",
 
       options: {
         // see below for options. this is optional.
