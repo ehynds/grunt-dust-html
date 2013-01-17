@@ -9,8 +9,6 @@
 module.exports = function(grunt) {
   "use strict";
 
-  var _ = grunt.utils._;
-
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
     var src = this.file.src;
     var dest = this.file.dest;
