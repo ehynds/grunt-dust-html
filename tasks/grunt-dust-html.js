@@ -53,7 +53,11 @@ module.exports = function(grunt) {
           return callback(err);
         }
 
-        callback(null, html);
+        try {
+          callback(null, html);
+        } catch(e) {
+          grunt.fatal("Error parsing dust template: " + e + " " + filePath);
+        }
       });
     };
 
