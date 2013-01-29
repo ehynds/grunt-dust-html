@@ -27,7 +27,7 @@ module.exports = function(grunt) {
     // find me some dust
     try {
       dust = require("dust");
-    } catch(e) {
+    } catch(err) {
       dust = require("dustjs-linkedin");
     }
 
@@ -55,15 +55,21 @@ module.exports = function(grunt) {
 
         try {
           callback(null, html);
-        } catch(e) {
-          grunt.fatal("Error parsing dust template: " + e + " " + filePath);
+        } catch(err) {
+          parseError(err, filePath);
         }
       });
     };
 
     grunt.file.expandFiles(src).forEach(function(srcFile) {
-      var tmpl = dust.compileFn(grunt.file.read(src));
       var context = opts.context || {};
+      var tmpl;
+
+      try {
+        tmpl = dust.compileFn(grunt.file.read(src));
+      } catch(err) {
+        parseError(err, srcFile);
+      }
 
       // preserve whitespace?
       if(opts.whitespace) {
@@ -89,5 +95,9 @@ module.exports = function(grunt) {
       });
     });
   });
+
+  function parseError(err, filePath) {
+    grunt.fatal("Error parsing dust template: " + err + " " + filePath);
+  }
 
 };
