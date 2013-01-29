@@ -49,6 +49,7 @@ module.exports = function(grunt) {
 
       fs.readFile(filePath, "utf8", function(err, html) {
         if(err) {
+          grunt.warn("Template " + err.path + " does not exist");
           return callback(err);
         }
 
