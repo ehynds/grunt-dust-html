@@ -69,7 +69,11 @@ module.exports = function(grunt) {
 
       // if context is a string assume it's a file location
       if(typeof context === "string") {
-        context = JSON.parse(grunt.file.read(opts.context));
+        try {
+          context = JSON.parse(grunt.file.read(opts.context));
+        } catch(e) {
+          grunt.fatal("An error occurred parsing " + opts.context + ". Is it valid JSON?");
+        }
       }
 
       // parse and save as html
