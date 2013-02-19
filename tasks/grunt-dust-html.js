@@ -9,20 +9,11 @@
 module.exports = function(grunt) {
   "use strict";
 
+  var path = require("path");
+  var fs = require("fs");
+
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
-    var src = this.file.src;
-    var dest = this.file.dest;
     var dust;
-
-    if(!src) {
-      grunt.fatal("Missing src property.");
-      return;
-    }
-
-    if(!dest) {
-      grunt.fatal("Missing dest property");
-      return;
-    }
 
     // find me some dust
     try {
@@ -31,10 +22,12 @@ module.exports = function(grunt) {
       dust = require("dustjs-linkedin");
     }
 
-    var path = require("path");
-    var fs = require("fs");
-    var opts = this.data.options;
     var done = this.async();
+    var opts = this.options({
+      basePath: ".",
+      whitespace: false,
+      context: {}
+    });
 
     // Load includes/partials from the filesystem properly
     dust.onLoad = function(filePath, callback) {
@@ -44,7 +37,7 @@ module.exports = function(grunt) {
       }
 
       if(filePath.charAt(0) !== "/") {
-        filePath = (opts.basePath || ".") + "/" + filePath;
+        filePath = opts.basePath + "/" + filePath;
       }
 
       fs.readFile(filePath, "utf8", function(err, html) {
@@ -61,37 +54,38 @@ module.exports = function(grunt) {
       });
     };
 
-    grunt.file.expandFiles(src).forEach(function(srcFile) {
-      var context = opts.context || {};
-      var tmpl;
+    this.files.forEach(function(f) {
+      f.src.forEach(function(srcFile) {
+        var context, tmpl;
 
-      try {
-        tmpl = dust.compileFn(grunt.file.read(src));
-      } catch(err) {
-        parseError(err, srcFile);
-      }
-
-      // preserve whitespace?
-      if(opts.whitespace) {
-        dust.optimizers.format = function(ctx, node) {
-          return node;
-        };
-      }
-
-      // if context is a string assume it's a file location
-      if(typeof context === "string") {
         try {
-          context = JSON.parse(grunt.file.read(opts.context));
-        } catch(e) {
-          grunt.fatal("An error occurred parsing " + opts.context + ". Is it valid JSON?");
+          tmpl = dust.compileFn(grunt.file.read(srcFile));
+        } catch(err) {
+          parseError(err, srcFile);
         }
-      }
 
-      // parse and save as html
-      tmpl(context, function(err, html) {
-        grunt.file.write(dest, html);
-        grunt.log.writeln('File "' + dest + '" created.');
-        done();
+        // preserve whitespace?
+        if(opts.whitespace) {
+          dust.optimizers.format = function(ctx, node) {
+            return node;
+          };
+        }
+
+        // if context is a string assume it's a file location
+        if(typeof opts.context === "string") {
+          try {
+            context = grunt.file.readJSON(opts.context);
+          } catch(e) {
+            grunt.fatal("An error occurred parsing " + opts.context + ". Is it valid JSON?");
+          }
+        }
+
+        // parse and save as html
+        tmpl(context, function(err, html) {
+          grunt.file.write(f.dest, html);
+          grunt.log.writeln('File "' + f.dest + '" created.');
+          done();
+        });
       });
     });
   });

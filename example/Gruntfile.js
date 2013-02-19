@@ -6,7 +6,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     dusthtml: {
-      // render home page
       home: {
         src: "src/home.dust",
         dest: "dist/home.html",
@@ -21,5 +20,5 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask("default", "dusthtml");
+  grunt.registerTask("default", ["dusthtml"]);
 };

@@ -1,7 +1,7 @@
 {
   "name" : "grunt-dust-html",
   "description" : "Grunt task to render Dust templates to HTML",
-  "version" : "0.0.3",
+  "version" : "0.1.0",
   "homepage" : "",
   "author" : {
     "name" : "Eric Hynds",
@@ -15,16 +15,18 @@
   "bugs" : {
     "url" : "https://github.com/ehynds/grunt-dust-html/issues"
   },
-  "main" : "grunt.js",
+  "main" : "Gruntfile.js",
   "bin" : "bin/grunt-dust-html",
   "engines" : {
-    "node" : "*"
+    "node" : ">= 0.8.0"
   },
   "scripts" : {
     "test" : "grunt test"
   },
   "dependencies" : {
-    "grunt" : "0.3.x"
+    "grunt" : "0.4.x",
+    "grunt-contrib-jshint": "0.1.x",
+    "grunt-contrib-nodeunit": "0.1.x"
   },
   "keywords" : [
     "gruntplugin", "dust", "template", "linkedin"
