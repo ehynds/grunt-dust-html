@@ -25,6 +25,7 @@ module.exports = function(grunt) {
     var done = this.async();
     var opts = this.options({
       basePath: ".",
+      defaultExt: ".dust",
       whitespace: false,
       context: {}
     });
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
     dust.onLoad = function(filePath, callback) {
       // Make sure the file to load has the proper extension
       if(!path.extname(filePath).length) {
-        filePath += ".dust";
+        filePath += opts.defaultExt;
       }
 
       if(filePath.charAt(0) !== "/") {
