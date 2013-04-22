@@ -83,7 +83,7 @@ module.exports = function(grunt) {
         }
 
         // parse and save as html
-        tmpl(context, function(err, html) {
+        tmpl(opts.context, function(err, html) {
           grunt.file.write(f.dest, html);
           grunt.log.writeln('File "' + f.dest + '" created.');
           done();
