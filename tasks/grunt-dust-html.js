@@ -57,7 +57,8 @@ module.exports = function(grunt) {
 
     this.files.forEach(function(f) {
       f.src.forEach(function(srcFile) {
-        var context, tmpl;
+        var context = opts.context;
+        var tmpl;
 
         try {
           tmpl = dust.compileFn(grunt.file.read(srcFile));
