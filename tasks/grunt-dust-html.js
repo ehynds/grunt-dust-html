@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 
   var path = require("path");
   var fs = require("fs");
+  var _ = grunt.util._;
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
     var dust;
@@ -60,6 +61,7 @@ module.exports = function(grunt) {
         var context = opts.context;
         var tmpl;
 
+        // pre-compile the template
         try {
           tmpl = dust.compileFn(grunt.file.read(srcFile));
         } catch(err) {
@@ -73,16 +75,24 @@ module.exports = function(grunt) {
           };
         }
 
-        // if context is a string assume it's a file location
+        // if context is a string assume it's the location to a file
         if(typeof opts.context === "string") {
-          try {
-            context = grunt.file.readJSON(opts.context);
-          } catch(e) {
-            grunt.fatal("An error occurred parsing " + opts.context + ". Is it valid JSON?");
-          }
+          context = grunt.file.readJSON(opts.context);
+
+        // if context is an array merge each item together
+        } else if(Array.isArray(opts.context)) {
+          context = {};
+
+          opts.context.forEach(function(obj) {
+            if(typeof obj === "string") {
+              obj = grunt.file.readJSON(obj);
+            }
+
+            _.extend(context, obj);
+          });
         }
 
-        // parse and save as html
+        // render template and save as html
         tmpl(context, function(err, html) {
           grunt.file.write(f.dest, html);
           grunt.log.writeln('File "' + f.dest + '" created.');
