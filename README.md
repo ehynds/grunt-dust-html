@@ -69,7 +69,7 @@ context: [
   "path/to/context.json",
   "path/to/another/context.json",
   { more: "data" }
-}
+]
 ```
 
 ### FAQ
