@@ -48,15 +48,13 @@ This plugin can be customized by specifying the following options:
 * `defaultExt`: The default template extension. Defaults to `.dust`.
 * `context`: A JavaScript object to render the template against. This option supports a few different types:
 
-1. **String**: the location to a file containing valid JSON:
+**String**: the location to a file containing valid JSON:
 
 ```js
-context: {
-  "/path/to/file.json"
-}
+context: "/path/to/file.json"
 ```
 
-2. **Object**: a regular ol' JavaScript object:
+**Object**: a regular ol' JavaScript object:
 
 ```js
 context: {
@@ -64,15 +62,13 @@ context: {
 }
 ```
 
-3. **Array**: an array of contexts, either string (files to parse) or JavaScript objects, or both. Each item in the array will be merged into a single context and rendered against the template:
+**Array**: an array of contexts, either string (files to parse) or JavaScript objects, or both. Each item in the array will be merged into a single context and rendered against the template:
     
 ```js
 context: [
   "path/to/context.json",
   "path/to/another/context.json",
-  {
-      more: "data"
-  }
+  { more: "data" }
 }
 ```
 
