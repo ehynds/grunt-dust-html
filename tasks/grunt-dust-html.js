@@ -20,7 +20,12 @@ module.exports = function(grunt) {
     try {
       dust = require("dust");
     } catch(err) {
-      dust = require("dustjs-linkedin");
+      try {
+        // use the linkedin version with helpers if available
+        dust = require("dustjs-helpers"); 
+      } catch(err) {
+        dust = require("dustjs-linkedin");
+      }
     }
 
     var done = this.async();
