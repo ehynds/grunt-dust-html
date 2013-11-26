@@ -20,7 +20,12 @@ module.exports = function(grunt) {
     try {
       dust = require("dust");
     } catch(err) {
-      dust = require("dustjs-linkedin");
+      try {
+        // use the linkedin version with helpers if available
+        dust = require("dustjs-helpers"); 
+      } catch(err) {
+        dust = require("dustjs-linkedin");
+      }
     }
 
     var done = this.async();
@@ -61,18 +66,18 @@ module.exports = function(grunt) {
         var context = opts.context;
         var tmpl;
 
+        // preserve whitespace?
+        if(opts.whitespace) {
+            dust.optimizers.format = function(ctx, node) {
+                return node;
+            };
+        }
+
         // pre-compile the template
         try {
           tmpl = dust.compileFn(grunt.file.read(srcFile));
         } catch(err) {
           parseError(err, srcFile);
-        }
-
-        // preserve whitespace?
-        if(opts.whitespace) {
-          dust.optimizers.format = function(ctx, node) {
-            return node;
-          };
         }
 
         // if context is a string assume it's the location to a file
