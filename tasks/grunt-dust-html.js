@@ -91,13 +91,25 @@ module.exports = function(grunt) {
             _.extend(context, obj);
           });
         }
-
-        // render template and save as html
-        tmpl(context, function(err, html) {
-          grunt.file.write(f.dest, html);
-          grunt.log.writeln('File "' + f.dest + '" created.');
-          done();
-        });
+        
+        // if contexts is an object assume multiple targets
+        if (typeof opts.contexts === "object") {
+            _.each(opts.contexts, function (context, name) {
+                // render template and save as html
+                tmpl(context, function(err, html) {
+                  grunt.file.write(f.dest + name, html);
+                  grunt.log.writeln('File "' + f.dest + name + '" created.');
+                });
+            });
+            done();
+        } else {
+            // render template and save as html
+            tmpl(context, function(err, html) {
+              grunt.file.write(f.dest, html);
+              grunt.log.writeln('File "' + f.dest + '" created.');
+              done();
+            });
+        }
       });
     });
   });
