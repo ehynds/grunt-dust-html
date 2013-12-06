@@ -15,26 +15,21 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
     var dust;
-
-    // find me some dust
-    try {
-      dust = require("dust");
-    } catch(err) {
-      try {
-        // use the linkedin version with helpers if available
-        dust = require("dustjs-helpers"); 
-      } catch(err) {
-        dust = require("dustjs-linkedin");
-      }
-    }
-
     var done = this.async();
     var opts = this.options({
       basePath: ".",
       defaultExt: ".dust",
       whitespace: false,
+      module: "dustjs-linkedin", // dust, dustjs-helpers, or dustjs-linkedin
       context: {}
     });
+
+    // Require dust
+    try {
+      dust = require(opts.module);
+    } catch(err) {
+      grunt.fail.fatal("Unable to find the " + opts.module + " dependency. Did you npm install it?");
+    }
 
     // Load includes/partials from the filesystem properly
     dust.onLoad = function(filePath, callback) {

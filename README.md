@@ -47,6 +47,11 @@ This plugin can be customized by specifying the following options:
 * `basePath`: The base location to all your templates so that includes/partials can be resolved correctly.
 * `defaultExt`: The default template extension. Defaults to `.dust`.
 * `context`: A JavaScript object to render the template against. This option supports a few different types:
+* `module`: The name of the Dust module to use. Defaults to
+`dustjs-linkedin` but can also be `dust` for plain ol' dust, or
+`dustjs-helpers` for the LinkedIn Dust build with helpers. If this option is
+anything other than the default, make sure you have installed the module via
+`npm install`.
 
 **String**: the location to a file containing valid JSON:
 
