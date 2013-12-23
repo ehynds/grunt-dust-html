@@ -31,34 +31,9 @@ module.exports = function(grunt) {
       grunt.fail.fatal("Unable to find the " + opts.module + " dependency. Did you npm install it?");
     }
 
-    // Load includes/partials from the filesystem properly
-    dust.onLoad = function(filePath, callback) {
-      // Make sure the file to load has the proper extension
-      if(!path.extname(filePath).length) {
-        filePath += opts.defaultExt;
-      }
-
-      if(filePath.charAt(0) !== "/") {
-        filePath = opts.basePath + "/" + filePath;
-      }
-
-      fs.readFile(filePath, "utf8", function(err, html) {
-        if(err) {
-          grunt.warn("Template " + err.path + " does not exist");
-          return callback(err);
-        }
-
-        try {
-          callback(null, html);
-        } catch(err) {
-          parseError(err, filePath);
-        }
-      });
-    };
-
     this.files.forEach(function(f) {
       f.src.forEach(function(srcFile) {
-        var context = opts.context;
+        var context = opts.context = f.context;//opts.context;
         var tmpl;
 
         // preserve whitespace?
@@ -67,6 +42,30 @@ module.exports = function(grunt) {
                 return node;
             };
         }
+        // Load includes/partials from the filesystem properly
+        dust.onLoad = function(filePath, callback) {
+          // Make sure the file to load has the proper extension
+          if(!path.extname(filePath).length) {
+            filePath += opts.defaultExt;
+          }
+
+          if(filePath.charAt(0) !== "/") {
+            filePath = path.dirname(srcFile) + "/" + filePath;
+          }
+
+          fs.readFile(filePath, "utf8", function(err, html) {
+            if(err) {
+              grunt.warn("Template " + err.path + " does not exist");
+              return callback(err);
+            }
+
+            try {
+              callback(null, html);
+            } catch(err) {
+              parseError(err, filePath);
+            }
+          });
+        };
 
         // pre-compile the template
         try {
