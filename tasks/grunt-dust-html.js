@@ -9,20 +9,22 @@
 module.exports = function(grunt) {
   "use strict";
 
-  var path = require("path");
-  var fs = require("fs");
-  var _ = grunt.util._;
+  var path = require("path"),
+      fs   = require("fs"),
+      _    = grunt.util._;
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
-    var dust;
-    var done = this.async();
-    var opts = this.options({
-      basePath: ".",
-      defaultExt: ".dust",
-      whitespace: false,
-      module: "dustjs-linkedin", // dust, dustjs-helpers, or dustjs-linkedin
-      context: {}
-    });
+    var dust,
+        done           = this.async(),
+        processedFiles = 0,
+        self           = this,
+        opts           = this.options({
+          basePath: ".",
+          defaultExt: ".dust",
+          whitespace: false,
+          module: "dustjs-linkedin", // dust, dustjs-helpers, or dustjs-linkedin
+          context: {}
+        });
 
     // Require dust
     try {
@@ -31,34 +33,9 @@ module.exports = function(grunt) {
       grunt.fail.fatal("Unable to find the " + opts.module + " dependency. Did you npm install it?");
     }
 
-    // Load includes/partials from the filesystem properly
-    dust.onLoad = function(filePath, callback) {
-      // Make sure the file to load has the proper extension
-      if(!path.extname(filePath).length) {
-        filePath += opts.defaultExt;
-      }
-
-      if(filePath.charAt(0) !== "/") {
-        filePath = opts.basePath + "/" + filePath;
-      }
-
-      fs.readFile(filePath, "utf8", function(err, html) {
-        if(err) {
-          grunt.warn("Template " + err.path + " does not exist");
-          return callback(err);
-        }
-
-        try {
-          callback(null, html);
-        } catch(err) {
-          parseError(err, filePath);
-        }
-      });
-    };
-
     this.files.forEach(function(f) {
       f.src.forEach(function(srcFile) {
-        var context = opts.context;
+        var context = opts.context = f.context;//opts.context;
         var tmpl;
 
         // preserve whitespace?
@@ -67,6 +44,31 @@ module.exports = function(grunt) {
                 return node;
             };
         }
+        // Load includes/partials from the filesystem properly
+        dust.onLoad = function(filePath, callback) {
+          // Make sure the file to load has the proper extension
+          if(!path.extname(filePath).length) {
+            filePath += opts.defaultExt;
+          }
+
+          if(filePath.charAt(0) !== "/") {
+            filePath = opts.basePath + "/" + filePath;
+            filePath = path.normalize(filePath);
+          }
+
+          fs.readFile(filePath, "utf8", function(err, html) {
+            if(err) {
+              grunt.warn("Template " + err.path + " does not exist");
+              return callback(err);
+            }
+
+            try {
+              callback(null, html);
+            } catch(err) {
+              parseError(err, filePath);
+            }
+          });
+        };
 
         // pre-compile the template
         try {
@@ -96,7 +98,10 @@ module.exports = function(grunt) {
         tmpl(context, function(err, html) {
           grunt.file.write(f.dest, html);
           grunt.log.writeln('File "' + f.dest + '" created.');
-          done();
+          processedFiles++;
+          if (processedFiles === self.files.length) {
+            done();
+          }
         });
       });
     });

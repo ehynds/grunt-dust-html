@@ -1,35 +1,38 @@
 {
-  "name" : "grunt-dust-html",
-  "description" : "Grunt task to render Dust templates to HTML",
-  "version" : "0.1.4",
-  "homepage" : "",
-  "author" : {
-    "name" : "Eric Hynds",
-    "email" : "ehynds@gmail.com",
-    "url" : "http://erichynds.com"
+  "name": "grunt-dust-html",
+  "description": "Grunt task to render Dust templates to HTML",
+  "version": "0.1.4",
+  "homepage": "",
+  "author": {
+    "name": "Eric Hynds",
+    "email": "ehynds@gmail.com",
+    "url": "http://erichynds.com"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "git://github.com/ehynds/grunt-dust-html.git"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ehynds/grunt-dust-html.git"
   },
-  "bugs" : {
-    "url" : "https://github.com/ehynds/grunt-dust-html/issues"
+  "bugs": {
+    "url": "https://github.com/ehynds/grunt-dust-html/issues"
   },
-  "main" : "Gruntfile.js",
-  "bin" : "bin/grunt-dust-html",
-  "engines" : {
-    "node" : ">= 0.8.0"
+  "main": "Gruntfile.js",
+  "bin": "bin/grunt-dust-html",
+  "engines": {
+    "node": ">= 0.8.0"
   },
-  "scripts" : {
-    "test" : "grunt test"
+  "scripts": {
+    "test": "grunt test"
   },
-  "dependencies" : {
-    "grunt" : "~0.4.2",
+  "dependencies": {
+    "grunt": "~0.4.2",
     "grunt-contrib-jshint": "0.1.x",
     "grunt-contrib-nodeunit": "0.1.x",
-    "dustjs-linkedin": "~2.2.3"
+    "dustjs-linkedin": "~2.2.2"
   },
-  "keywords" : [
-    "gruntplugin", "dust", "template", "linkedin"
+  "keywords": [
+    "gruntplugin",
+    "dust",
+    "template",
+    "linkedin"
   ]
 }
