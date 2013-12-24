@@ -9,9 +9,9 @@
 module.exports = function(grunt) {
   "use strict";
 
-  var path = require("path");
-  var fs = require("fs");
-  var _ = grunt.util._;
+  var path = require("path"),
+      fs   = require("fs"),
+      _    = grunt.util._;
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
     var dust,
@@ -52,7 +52,8 @@ module.exports = function(grunt) {
           }
 
           if(filePath.charAt(0) !== "/") {
-            filePath = path.dirname(srcFile) + "/" + filePath;
+            filePath = opts.basePath + "/" + filePath;
+            filePath = path.normalize(filePath);
           }
 
           fs.readFile(filePath, "utf8", function(err, html) {
