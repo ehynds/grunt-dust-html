@@ -14,15 +14,17 @@ module.exports = function(grunt) {
   var _ = grunt.util._;
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
-    var dust;
-    var done = this.async();
-    var opts = this.options({
-      basePath: ".",
-      defaultExt: ".dust",
-      whitespace: false,
-      module: "dustjs-linkedin", // dust, dustjs-helpers, or dustjs-linkedin
-      context: {}
-    });
+    var dust,
+        done           = this.async(),
+        processedFiles = 0,
+        self           = this,
+        opts           = this.options({
+          basePath: ".",
+          defaultExt: ".dust",
+          whitespace: false,
+          module: "dustjs-linkedin", // dust, dustjs-helpers, or dustjs-linkedin
+          context: {}
+        });
 
     // Require dust
     try {
@@ -95,7 +97,10 @@ module.exports = function(grunt) {
         tmpl(context, function(err, html) {
           grunt.file.write(f.dest, html);
           grunt.log.writeln('File "' + f.dest + '" created.');
-          done();
+          processedFiles++;
+          if (processedFiles === self.files.length) {
+            done();
+          }
         });
       });
     });
