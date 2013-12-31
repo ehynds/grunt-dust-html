@@ -12,6 +12,7 @@ module.exports = function(grunt) {
   var path = require("path");
   var fs = require("fs");
   var _ = grunt.util._;
+  var async = require("async");
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
     var dust;
@@ -56,7 +57,7 @@ module.exports = function(grunt) {
       });
     };
 
-    this.files.forEach(function(f) {
+    async.each(this.files, function(f) {
       f.src.forEach(function(srcFile) {
         var context = opts.context;
         var tmpl;
@@ -96,10 +97,9 @@ module.exports = function(grunt) {
         tmpl(context, function(err, html) {
           grunt.file.write(f.dest, html);
           grunt.log.writeln('File "' + f.dest + '" created.');
-          done();
         });
       });
-    });
+    }, done);
   });
 
   function parseError(err, filePath) {

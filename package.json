@@ -27,7 +27,8 @@
     "grunt" : "~0.4.2",
     "grunt-contrib-jshint": "0.1.x",
     "grunt-contrib-nodeunit": "0.1.x",
-    "dustjs-linkedin": "~2.2.3"
+    "dustjs-linkedin": "~2.2.3",
+    "async":"~0.2.9"
   },
   "keywords" : [
     "gruntplugin", "dust", "template", "linkedin"
