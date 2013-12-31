@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 
   var path = require("path");
   var fs = require("fs");
-  var _ = grunt.util._;
+  var _ = require("lodash");
   var async = require("async");
 
   grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
