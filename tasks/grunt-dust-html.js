@@ -57,7 +57,7 @@ module.exports = function(grunt) {
       });
     };
 
-    async.each(this.files, function(f) {
+    async.each(this.files, function(f, callback) {
       f.src.forEach(function(srcFile) {
         var context = opts.context;
         var tmpl;
@@ -99,6 +99,7 @@ module.exports = function(grunt) {
           grunt.log.writeln('File "' + f.dest + '" created.');
         });
       });
+      callback();
     }, done);
   });
 
