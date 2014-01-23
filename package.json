@@ -24,12 +24,17 @@
     "test" : "grunt test"
   },
   "dependencies" : {
-    "grunt" : "~0.4.2",
-    "grunt-contrib-jshint": "0.1.x",
-    "grunt-contrib-nodeunit": "0.1.x",
     "dustjs-linkedin": "~2.2.2",
     "async":"~0.2.9",
     "lodash":"~2.4.1"
+  },
+  "peerDependencies": {
+    "grunt" : "~0.4.2"
+  },
+  "devDependencies": {
+    "grunt" : "~0.4.2",
+    "grunt-contrib-jshint": "0.1.x",
+    "grunt-contrib-nodeunit": "0.1.x"
   },
   "keywords" : [
     "gruntplugin", "dust", "template", "linkedin"
