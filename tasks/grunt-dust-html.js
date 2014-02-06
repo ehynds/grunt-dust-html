@@ -100,6 +100,7 @@ module.exports = function(grunt) {
           callback();
         });
       });
+      callback();
     }, done);
   });
 
