@@ -74,6 +74,10 @@ module.exports = function(grunt) {
       f.src.forEach(function(srcFile) {
         var context = opts.context;
         var tmpl;
+        var filePath = path.dirname(srcFile);
+        var fileExt = path.extname(srcFile);
+        var fileName = path.basename(srcFile, fileExt);
+        var fileContext = path.join(filePath, fileName + '.json');
 
         // preserve whitespace?
         if(opts.whitespace) {
@@ -104,6 +108,10 @@ module.exports = function(grunt) {
 
             _.extend(context, obj);
           });
+        }
+
+        if(grunt.file.isFile(fileContext)){
+          _.extend(context, grunt.file.readJSON(fileContext));
         }
 
         // render template and save as html
