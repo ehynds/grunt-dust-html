@@ -95,6 +95,10 @@ module.exports = function(grunt) {
 
         // render template and save as html
         tmpl(context, function(err, html) {
+          if (typeof html === 'undefined') {
+            grunt.fail.warn('The HTML for the output file is undefined! ' +
+              'Please check your dust.js templates and context objects.');
+          }
           grunt.file.write(f.dest, html);
           grunt.log.writeln('File "' + f.dest + '" created.');
           callback();
