@@ -20,7 +20,13 @@ exports.dusthtml = {
   contextAsString: function(test) {
     test.expect(1);
 
-    dusthtml.render('Hello {firstname}', { context: { firstname: 'Eric' } }, function(err, html) {
+    var opts = {
+      context: {
+        firstname: 'Eric'
+      }
+    };
+
+    dusthtml.render('Hello {firstname}', opts, function(err, html) {
       test.equal(html, 'Hello Eric');
       test.done();
     });
@@ -29,9 +35,11 @@ exports.dusthtml = {
   contextAsFile: function(test) {
     test.expect(1);
 
-    dusthtml.render('Hello {firstname}', {
-      context: path.join(__dirname, './fixtures/context.json')
-    }, function(err, html) {
+    var opts = {
+      context: path.join(fixtures, 'context.json')
+    };
+
+    dusthtml.render('Hello {firstname}', opts, function(err, html) {
       test.equal(html, 'Hello Eric');
       test.done();
     });
@@ -40,9 +48,14 @@ exports.dusthtml = {
   contextAsArrayMixed: function(test) {
     test.expect(1);
 
-    dusthtml.render('Hello {firstname} {lastname}', {
-      context: [path.join(fixtures, 'context.json'), { lastname: 'Hynds' }]
-    }, function(err, html) {
+    var opts = {
+      context: [
+        path.join(fixtures, 'context.json'),
+        { lastname: 'Hynds' }
+      ]
+    };
+
+    dusthtml.render('Hello {firstname} {lastname}', opts, function(err, html) {
       test.equal(html, 'Hello Eric Hynds');
       test.done();
     });
@@ -51,9 +64,14 @@ exports.dusthtml = {
   contextAsArrayObjects: function(test) {
     test.expect(1);
 
-    dusthtml.render('Hello {firstname} {lastname}', {
-      context: [{ firstname: 'Eric' }, { lastname: 'Hynds' }]
-    }, function(err, html) {
+    var opts = {
+      context: [
+        { firstname: 'Eric' },
+        { lastname: 'Hynds' }
+      ]
+    };
+
+    dusthtml.render('Hello {firstname} {lastname}', opts, function(err, html) {
       test.equal(html, 'Hello Eric Hynds');
       test.done();
     });
@@ -78,4 +96,14 @@ exports.dusthtml = {
       });
     });
   },
+
+  invalidPartial: function(test) {
+    test.expect(2);
+
+    dusthtml.render('{>foo/}', {}, function(err, html) {
+      test.equal(err instanceof Error, true);
+      test.equal(html, null);
+      test.done();
+    });
+  }
 };

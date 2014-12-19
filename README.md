@@ -51,12 +51,12 @@ This plugin can be customized by specifying the following options:
 `dustjs-helpers` for the LinkedIn Dust build with helpers. If this option is
 anything other than the default, make sure you have installed the module via
 `npm install`.
-* `context` (Object): A JavaScript object to render the template against. This option supports a few different types:
+* `context` (Object|String): A JavaScript object to render the template against. This option supports two different types:
 
 **String**: the location to a file containing valid JSON:
 
 ```js
-context: "/path/to/file.json"
+context: "path/to/file.json"
 ```
 
 **Object**: a regular ol' JavaScript object:
@@ -81,3 +81,7 @@ context: [
 
 1. *Why does the output say undefined?*  
 Most likely dust is trying to include a file but it can't resove the path properly. Make sure you're setting a `basePath` option.
+
+### Tests
+
+Run `npm test`.

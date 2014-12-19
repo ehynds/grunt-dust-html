@@ -23,7 +23,10 @@ module.exports = function(grunt) {
 
         return new Promise(function(resolve, reject) {
           dusthtml.render(input, opts, function(err, html) {
-            if(err) return reject(err);
+            if(err) {
+              return reject(err);
+            }
+
             grunt.file.write(file.dest, html);
             grunt.log.ok('File "' + file.dest + '" created.');
             resolve();

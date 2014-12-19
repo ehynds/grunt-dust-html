@@ -1,10 +1,14 @@
 module.exports = function(grunt) {
-  "use strict";
+  'use strict';
 
   // Project configuration.
   grunt.initConfig({
     jshint: {
-      files: ["Gruntfile.js", "tasks/**/*.js", "test/*.js"],
+      files: [
+        'Gruntfile.js',
+        'tasks/**/*.js',
+        'test/*.js'
+      ],
       options: {
         curly: true,
         eqeqeq: true,
@@ -20,11 +24,11 @@ module.exports = function(grunt) {
       }
     },
     nodeunit: {
-      tests: ["test/*_test.js"]
+      tests: ['test/*_test.js']
     }
   });
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-contrib-nodeunit");
-  grunt.registerTask("test", ["nodeunit"]);
-  grunt.registerTask("default", ["jshint"]);
+
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  grunt.registerTask('default', ['jshint', 'nodeunit']);
 };
