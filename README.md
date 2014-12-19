@@ -43,15 +43,15 @@ grunt.initConfig({
 
 This plugin can be customized by specifying the following options:
 
-* `whitespace`: Whether or not to preserve whitespace. `false` by default.
-* `basePath`: The base location to all your templates so that includes/partials can be resolved correctly.
-* `defaultExt`: The default template extension. Defaults to `.dust`.
-* `module`: The name of the Dust module to use. Defaults to
+* `whitespace` (Boolean): Whether or not to preserve whitespace. `false` by default.
+* `basePath` (String|Array): The base location to all your templates so that includes/partials can be resolved correctly.
+* `defaultExt` (String): The default template extension. Defaults to `.dust`.
+* `module` (String): The name of the Dust module to use. Defaults to
 `dustjs-linkedin` but can also be `dust` for plain ol' dust, or
 `dustjs-helpers` for the LinkedIn Dust build with helpers. If this option is
 anything other than the default, make sure you have installed the module via
 `npm install`.
-* `context`: A JavaScript object to render the template against. This option supports a few different types:
+* `context` (Object): A JavaScript object to render the template against. This option supports a few different types:
 
 **String**: the location to a file containing valid JSON:
 
