@@ -2,7 +2,7 @@
  * Grunt Dust-HTML
  * https://github.com/ehynds/grunt-dust-html
  *
- * Copyright (c) 2013 Eric Hynds
+ * Copyright (c) 2014 Eric Hynds
  * Licensed under the MIT license.
  */
 
@@ -64,9 +64,9 @@ module.exports = function(grunt) {
 
         // preserve whitespace?
         if(opts.whitespace) {
-            dust.optimizers.format = function(ctx, node) {
-                return node;
-            };
+          dust.optimizers.format = function(ctx, node) {
+            return node;
+          };
         }
 
         // pre-compile the template
@@ -106,5 +106,4 @@ module.exports = function(grunt) {
   function parseError(err, filePath) {
     grunt.fatal("Error parsing dust template: " + err + " " + filePath);
   }
-
 };
