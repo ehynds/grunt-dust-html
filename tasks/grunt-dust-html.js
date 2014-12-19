@@ -34,13 +34,26 @@ module.exports = function(grunt) {
 
     // Load includes/partials from the filesystem properly
     dust.onLoad = function(filePath, callback) {
+      var i;
       // Make sure the file to load has the proper extension
       if(!path.extname(filePath).length) {
         filePath += opts.defaultExt;
       }
 
       if(filePath.charAt(0) !== "/") {
-        filePath = opts.basePath + "/" + filePath;
+        //only joins the paths if "string"
+        if(typeof opts.basePath === "string"){
+          filePath = path.join(opts.basePath, filePath);
+        }
+        // Checks whether the "basePath" option is an Array and returns the first folder that contains the file.
+        else if(Array.isArray(opts.basePath)){
+          for(i = 0; i < opts.basePath.length; i++){
+            if(grunt.file.isFile(path.join(opts.basePath[i], filePath))){
+              filePath = path.join(opts.basePath[i], filePath);
+              break;
+            }
+          }
+        }
       }
 
       fs.readFile(filePath, "utf8", function(err, html) {
@@ -61,6 +74,10 @@ module.exports = function(grunt) {
       f.src.forEach(function(srcFile) {
         var context = opts.context;
         var tmpl;
+        var filePath = path.dirname(srcFile);
+        var fileExt = path.extname(srcFile);
+        var fileName = path.basename(srcFile, fileExt);
+        var fileContext = path.join(filePath, fileName + '.json');
 
         // preserve whitespace?
         if(opts.whitespace) {
@@ -91,6 +108,10 @@ module.exports = function(grunt) {
 
             _.extend(context, obj);
           });
+        }
+
+        if(grunt.file.isFile(fileContext)){
+          _.extend(context, grunt.file.readJSON(fileContext));
         }
 
         // render template and save as html
