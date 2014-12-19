@@ -1,7 +1,7 @@
 {
   "name": "grunt-dust-html",
   "description": "Grunt task to render Dust templates to HTML",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "main": "tasks/grunt-dust-html.js",
   "author": {
     "name": "Eric Hynds",
