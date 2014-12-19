@@ -34,21 +34,21 @@ module.exports = function(grunt) {
 
     // Load includes/partials from the filesystem properly
     dust.onLoad = function(filePath, callback) {
-      var i;
       // Make sure the file to load has the proper extension
       if(!path.extname(filePath).length) {
         filePath += opts.defaultExt;
       }
 
+      // If we're dealing with relative paths..
       if(filePath.charAt(0) !== "/") {
-        //only joins the paths if "string"
-        if(typeof opts.basePath === "string"){
+        // Only joins the paths if "string"
+        if(typeof opts.basePath === "string") {
           filePath = path.join(opts.basePath, filePath);
-        }
+
         // Checks whether the "basePath" option is an Array and returns the first folder that contains the file.
-        else if(Array.isArray(opts.basePath)){
-          for(i = 0; i < opts.basePath.length; i++){
-            if(grunt.file.isFile(path.join(opts.basePath[i], filePath))){
+        } else if(Array.isArray(opts.basePath)) {
+          for(var i = 0; i < opts.basePath.length; i++) {
+            if(grunt.file.isFile(path.join(opts.basePath[i], filePath))) {
               filePath = path.join(opts.basePath[i], filePath);
               break;
             }
@@ -72,12 +72,12 @@ module.exports = function(grunt) {
 
     async.each(this.files, function(f, callback) {
       f.src.forEach(function(srcFile) {
-        var context = opts.context;
-        var tmpl;
         var filePath = path.dirname(srcFile);
         var fileExt = path.extname(srcFile);
         var fileName = path.basename(srcFile, fileExt);
-        var fileContext = path.join(filePath, fileName + '.json');
+        var fileContext = path.join(filePath, fileName + ".json");
+        var context = opts.context;
+        var tmpl;
 
         // preserve whitespace?
         if(opts.whitespace) {
@@ -110,7 +110,7 @@ module.exports = function(grunt) {
           });
         }
 
-        if(grunt.file.isFile(fileContext)){
+        if(grunt.file.isFile(fileContext)) {
           _.extend(context, grunt.file.readJSON(fileContext));
         }
 
