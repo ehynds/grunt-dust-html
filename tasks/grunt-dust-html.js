@@ -9,122 +9,22 @@
 module.exports = function(grunt) {
   "use strict";
 
-  var path = require("path");
-  var fs = require("fs");
-  var _ = require("lodash");
-  var async = require("async");
+  var dusthtml = require('./lib/dusthtml');
+  var async = require('async');
 
-  grunt.registerMultiTask("dusthtml", "Render Dust templates against a context to produce HTML", function() {
-    var dust;
+  grunt.registerMultiTask('dusthtml', 'Render Dust templates against a context to produce HTML', function() {
     var done = this.async();
-    var opts = this.options({
-      basePath: ".",
-      defaultExt: ".dust",
-      whitespace: false,
-      module: "dustjs-linkedin", // dust, dustjs-helpers, or dustjs-linkedin
-      context: {}
-    });
+    var opts = this.options();
 
-    // Require dust
-    try {
-      dust = require(opts.module);
-    } catch(err) {
-      grunt.fail.fatal("Unable to find the " + opts.module + " dependency. Did you npm install it?");
-    }
+    async.each(this.files, function(file, callback) {
+      file.src.forEach(function(filepath) {
+        var input = grunt.file.read(filepath);
 
-    // Load includes/partials from the filesystem properly
-    dust.onLoad = function(filePath, callback) {
-      // Make sure the file to load has the proper extension
-      if(!path.extname(filePath).length) {
-        filePath += opts.defaultExt;
-      }
-
-      // If we're dealing with relative paths..
-      if(filePath.charAt(0) !== "/") {
-        // Only joins the paths if "string"
-        if(typeof opts.basePath === "string") {
-          filePath = path.join(opts.basePath, filePath);
-
-        // Checks whether the "basePath" option is an Array and returns the first folder that contains the file.
-        } else if(Array.isArray(opts.basePath)) {
-          for(var i = 0; i < opts.basePath.length; i++) {
-            if(grunt.file.isFile(path.join(opts.basePath[i], filePath))) {
-              filePath = path.join(opts.basePath[i], filePath);
-              break;
-            }
-          }
-        }
-      }
-
-      fs.readFile(filePath, "utf8", function(err, html) {
-        if(err) {
-          grunt.warn("Template " + err.path + " does not exist");
-          return callback(err);
-        }
-
-        try {
-          callback(null, html);
-        } catch(err) {
-          parseError(err, filePath);
-        }
-      });
-    };
-
-    async.each(this.files, function(f, callback) {
-      f.src.forEach(function(srcFile) {
-        var filePath = path.dirname(srcFile);
-        var fileExt = path.extname(srcFile);
-        var fileName = path.basename(srcFile, fileExt);
-        var fileContext = path.join(filePath, fileName + ".json");
-        var context = opts.context;
-        var tmpl;
-
-        // preserve whitespace?
-        if(opts.whitespace) {
-          dust.optimizers.format = function(ctx, node) {
-            return node;
-          };
-        }
-
-        // pre-compile the template
-        try {
-          tmpl = dust.compileFn(grunt.file.read(srcFile));
-        } catch(err) {
-          parseError(err, srcFile);
-        }
-
-        // if context is a string assume it's the location to a file
-        if(typeof opts.context === "string") {
-          context = grunt.file.readJSON(opts.context);
-
-        // if context is an array merge each item together
-        } else if(Array.isArray(opts.context)) {
-          context = {};
-
-          opts.context.forEach(function(obj) {
-            if(typeof obj === "string") {
-              obj = grunt.file.readJSON(obj);
-            }
-
-            _.extend(context, obj);
-          });
-        }
-
-        if(grunt.file.isFile(fileContext)) {
-          _.extend(context, grunt.file.readJSON(fileContext));
-        }
-
-        // render template and save as html
-        tmpl(context, function(err, html) {
-          grunt.file.write(f.dest, html);
-          grunt.log.writeln('File "' + f.dest + '" created.');
-          callback();
+        dusthtml.render(input, opts, function(err, html) {
+          grunt.file.write(file.dest, html);
+          grunt.log.writeln('File "' + file.dest + '" created.');
         });
       });
     }, done);
   });
-
-  function parseError(err, filePath) {
-    grunt.fatal("Error parsing dust template: " + err + " " + filePath);
-  }
 };
