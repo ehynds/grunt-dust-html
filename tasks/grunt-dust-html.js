@@ -10,21 +10,28 @@ module.exports = function(grunt) {
   "use strict";
 
   var dusthtml = require('./lib/dusthtml');
-  var async = require('async');
+  var Promise = require('bluebird');
 
   grunt.registerMultiTask('dusthtml', 'Render Dust templates against a context to produce HTML', function() {
     var done = this.async();
     var opts = this.options();
+    var dfds = [];
 
-    async.each(this.files, function(file, callback) {
-      file.src.forEach(function(filepath) {
+    this.files.forEach(function(file) {
+      dfds = file.src.map(function(filepath) {
         var input = grunt.file.read(filepath);
 
-        dusthtml.render(input, opts, function(err, html) {
-          grunt.file.write(file.dest, html);
-          grunt.log.writeln('File "' + file.dest + '" created.');
+        return new Promise(function(resolve, reject) {
+          dusthtml.render(input, opts, function(err, html) {
+            if(err) return reject(err);
+            grunt.file.write(file.dest, html);
+            grunt.log.ok('File "' + file.dest + '" created.');
+            resolve();
+          });
         });
       });
-    }, done);
+    });
+
+    Promise.all(dfds).then(done).catch(grunt.fail.fatal);
   });
 };

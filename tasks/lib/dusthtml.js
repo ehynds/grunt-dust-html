@@ -27,7 +27,7 @@ module.exports.render = function(input, opts, callback) {
 
   // Configure dust to load partials from the paths defined
   // in the `partialsDir` option
-  dust.onLoad = function(filePath, callback) {
+  dust.onLoad = function(filePath, loadCallback) {
     // Make sure the file to load has the proper extension
     if(!path.extname(filePath).length) {
       filePath += opts.defaultExt;
@@ -52,10 +52,10 @@ module.exports.render = function(input, opts, callback) {
 
     fs.readFile(filePath, 'utf8', function(err, html) {
       if(err) {
-        throw new Error('Cannot find partial ' + filePath);
+        return callback(new Error('Cannot find partial ' + filePath));
       }
 
-      callback(null, html);
+      loadCallback(null, html);
     });
   };
 
@@ -70,7 +70,7 @@ module.exports.render = function(input, opts, callback) {
   try {
     tmpl = dust.compileFn(input);
   } catch(err) {
-    throw new Error('An error occurred compiling input string. ' + err.message);
+    callback(err);
   }
 
   // If the context option is a string, assume it's a file and read it as JSON
