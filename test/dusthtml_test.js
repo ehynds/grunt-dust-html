@@ -2,7 +2,6 @@
 
 var fs = require('fs');
 var path = require('path');
-var grunt = require('grunt');
 var dusthtml = require('../tasks/lib/dusthtml');
 var fixtures = path.join(__dirname, 'fixtures');
 

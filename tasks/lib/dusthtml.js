@@ -3,7 +3,6 @@
 var path = require('path');
 var fs = require('fs');
 var _ = require('lodash');
-var async = require('async');
 var grunt = require('grunt');
 
 module.exports.render = function(input, opts, callback) {
