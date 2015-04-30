@@ -12,6 +12,7 @@ module.exports = function(grunt) {
         options: {
           partialsDir: 'src/',
           whitespace: true,
+          cache: true,
           context: {
             title: 'Home Page',
             header: 'Header text',

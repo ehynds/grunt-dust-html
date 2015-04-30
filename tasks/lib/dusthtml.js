@@ -16,6 +16,7 @@ module.exports.render = function(input, opts, callback) {
     partialsDir: '.',
     defaultExt: '.dust',
     whitespace: false,
+    cache: true,
     module: 'dustjs-linkedin', // dust, dustjs-helpers, or dustjs-linkedin
     context: {}
   }, opts || {});
@@ -64,6 +65,10 @@ module.exports.render = function(input, opts, callback) {
       return node;
     };
   }
+
+  // turn off dust caching templates and partials.
+  // caching should be turned off if you want use grunt-dust-html with watchers
+  dust.config.cache = opts.cache;
 
   // Pre-compile the template
   try {
