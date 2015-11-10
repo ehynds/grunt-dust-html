@@ -18,10 +18,10 @@ module.exports = function(grunt) {
     var dfds = [];
 
     this.files.forEach(function(file) {
-      dfds = file.src.map(function(filepath) {
+      file.src.map(function(filepath) {
         var input = grunt.file.read(filepath);
 
-        return new Promise(function(resolve, reject) {
+        dfds.push(new Promise(function(resolve, reject) {
           dusthtml.render(input, opts, function(err, html) {
             if(err) {
               return reject(err);
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
             grunt.log.ok('File "' + file.dest + '" created.');
             resolve();
           });
-        });
+        }));
       });
     });
 
