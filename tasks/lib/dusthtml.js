@@ -83,6 +83,7 @@ module.exports.render = function(input, opts, callback) {
 
   // If context is an array merge each item together
   } else if(Array.isArray(opts.context)) {
+    context = {};
     opts.context.forEach(function(obj) {
       if(typeof obj === 'string') {
         obj = grunt.file.readJSON(obj);
